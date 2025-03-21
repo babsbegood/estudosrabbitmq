@@ -1,5 +1,4 @@
-﻿using EstudosRabbit.Core.Event;
-using EstudosRabbit.Handlers.Consumers;
+﻿using EstudosRabbit.Handlers.Consumers;
 using MassTransit;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -19,6 +18,7 @@ namespace EstudosRabbit.CrossCutting.Rabbitmq
                 busConfigurator.AddConsumer<PedidoProcessadoFanoutConsumer>();
                 busConfigurator.AddConsumer<PagamentoProcessadoFanoutConsumer>();
                 busConfigurator.AddConsumer<PagamentoProcessadoDirectConsumer>();
+                busConfigurator.AddConsumer<PagamentoProcessadoTopicConsumer>();
 
                 busConfigurator.UsingRabbitMq((ctx, cfg) =>
                 {
@@ -34,7 +34,7 @@ namespace EstudosRabbit.CrossCutting.Rabbitmq
                     {
                         e.Bind("payment-exchange", x =>
                         {
-                            x.ExchangeType = "fanout";  
+                            x.ExchangeType = "fanout";
                         });
 
                         e.ConfigureConsumer<PedidoProcessadoFanoutConsumer>(ctx);
@@ -45,7 +45,7 @@ namespace EstudosRabbit.CrossCutting.Rabbitmq
                     {
                         e.Bind("payment-exchange", x =>
                         {
-                            x.ExchangeType = "fanout"; 
+                            x.ExchangeType = "fanout";
                         });
 
                         e.ConfigureConsumer<PagamentoProcessadoFanoutConsumer>(ctx);
@@ -58,19 +58,26 @@ namespace EstudosRabbit.CrossCutting.Rabbitmq
 
                     cfg.ReceiveEndpoint("order-direct-queue", e =>
                     {
-                        cfg.Publish<DirectEvent>(p =>
-                        {
-                            p.ExchangeType = "direct";
-                        });
-
-                        e.ExchangeType = "direct";
-
                         e.Bind("order-direct-exchange", x =>
                         {
                             x.ExchangeType = "direct";
                         });
 
                         e.ConfigureConsumer<PagamentoProcessadoDirectConsumer>(ctx);
+                    });
+
+                    #endregion
+
+                    #region TOPIC
+
+                    cfg.ReceiveEndpoint("order-topic-queue", e =>
+                    {
+                        e.Bind("order-topic-exchange", x =>
+                        {
+                            x.ExchangeType = "topic";
+                            x.RoutingKey = "order.*";
+                        });
+                        e.ConfigureConsumer<PagamentoProcessadoTopicConsumer>(ctx);
                     });
 
                     #endregion

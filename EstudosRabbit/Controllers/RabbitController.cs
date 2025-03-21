@@ -18,9 +18,9 @@ namespace EstudosRabbit.Controllers
         public async Task<IActionResult> ProcessarPedidoFanout()
         {
 
-            var fanoutEvent = new FanoutEvent(Guid.NewGuid(), "evento fanout");
+            var fanoutEvent = new FanoutEvent(Guid.NewGuid(), "exchange fanout");
 
-            await _busSender.SendMessageAssync(fanoutEvent);
+            await _busSender.SendMessageAsync(fanoutEvent);
 
             return Ok();
         }
@@ -30,9 +30,35 @@ namespace EstudosRabbit.Controllers
         public async Task<IActionResult> ProcessarPedidoDirect()
         {
 
-            var directEvent = new DirectEvent(Guid.NewGuid(), "evento direct");
+            var directEvent = new DirectEvent(Guid.NewGuid(), "exchange direct");
 
-            await _busSender.SendMessageAssync(directEvent);
+            await _busSender.SendMessageAsync(directEvent);
+
+            return Ok();
+        }
+
+        [HttpPost("ProcessarPedidoTopicOrderCreated")]
+        public async Task<IActionResult> ProcessarPedidoTopicOrderCreated()
+        {
+
+            var topicEvent = new TopicEvent(Guid.NewGuid(), "exchange topic");
+
+            string routingKey = "order.created";
+
+            await _busSender.SendMessageToTopicAsync(topicEvent, routingKey);
+
+            return Ok();
+        }
+
+        [HttpPost("ProcessarPedidoTopicOrderUpdated")]
+        public async Task<IActionResult> ProcessarPedidoTopicOrderUpdated()
+        {
+
+            var topicEvent = new TopicEvent(Guid.NewGuid(), "exchange topic");
+
+            string routingKey = "order.updated";
+
+            await _busSender.SendMessageToTopicAsync(topicEvent, routingKey);
 
             return Ok();
         }

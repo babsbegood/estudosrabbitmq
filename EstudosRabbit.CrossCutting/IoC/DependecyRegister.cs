@@ -15,6 +15,7 @@ namespace EstudosRabbit.CrossCutting.IoC
             services.AddScoped<IPedidoProcessadoHandler, PedidoProcessadoFanoutHandler>();
             services.AddScoped<IPagamentoProcessadoHandler, PagamentoProcessadoFanoutHandler>();
             services.AddScoped<IPagamentoProcessadoDirectHandler, PagamentoProcessadoDirectHandler>();
+            services.AddScoped<IPagamentoProcessadoTopicHandler, PagamentoProcessadoTopicHandler>();
             return services;
         }
     }
