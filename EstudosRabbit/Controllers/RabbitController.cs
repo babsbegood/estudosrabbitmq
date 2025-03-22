@@ -29,7 +29,6 @@ namespace EstudosRabbit.Controllers
         [HttpPost("ProcessarPedidoDirect")]
         public async Task<IActionResult> ProcessarPedidoDirect()
         {
-
             var directEvent = new DirectEvent(Guid.NewGuid(), "exchange direct");
 
             await _busSender.SendMessageAsync(directEvent);

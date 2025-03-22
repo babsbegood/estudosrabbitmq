@@ -38,6 +38,11 @@ namespace EstudosRabbit.CrossCutting.Rabbitmq
                         });
 
                         e.ConfigureConsumer<PedidoProcessadoFanoutConsumer>(ctx);
+
+                        cfg.UseMessageRetry(r =>
+                        {
+                            r.Interval(3, TimeSpan.FromSeconds(5));
+                        });
                     });
 
 
@@ -49,6 +54,11 @@ namespace EstudosRabbit.CrossCutting.Rabbitmq
                         });
 
                         e.ConfigureConsumer<PagamentoProcessadoFanoutConsumer>(ctx);
+
+                        cfg.UseMessageRetry(r =>
+                        {
+                            r.Interval(3, TimeSpan.FromSeconds(5));
+                        });
                     });
 
                     #endregion
@@ -58,12 +68,17 @@ namespace EstudosRabbit.CrossCutting.Rabbitmq
 
                     cfg.ReceiveEndpoint("order-direct-queue", e =>
                     {
+
                         e.Bind("order-direct-exchange", x =>
                         {
                             x.ExchangeType = "direct";
                         });
 
                         e.ConfigureConsumer<PagamentoProcessadoDirectConsumer>(ctx);
+
+                       
+                        e.UseMessageRetry(r => r.Immediate(3));
+
                     });
 
                     #endregion
@@ -77,7 +92,13 @@ namespace EstudosRabbit.CrossCutting.Rabbitmq
                             x.ExchangeType = "topic";
                             x.RoutingKey = "order.*";
                         });
+
                         e.ConfigureConsumer<PagamentoProcessadoTopicConsumer>(ctx);
+
+                        cfg.UseMessageRetry(r =>
+                        {
+                            r.Interval(3, TimeSpan.FromSeconds(5));
+                        });
                     });
 
                     #endregion

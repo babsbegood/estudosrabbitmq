@@ -14,10 +14,8 @@ namespace EstudosRabbit.Handlers.Handlers
         }
         public async Task Handle(DirectEvent message)
         {
-            await Task.Run(() =>
-            {
-                _logger.LogInformation($"{message}");
-            });
+            _logger.LogInformation($"{message}");
+            await Task.CompletedTask;
         }
     }
 }

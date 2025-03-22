@@ -1,5 +1,14 @@
 ﻿namespace EstudosRabbit.Core.Event
 {
-    public record FanoutEvent(Guid id, string description, string type = "fanout");
+    public record FanoutEvent : BaseEvent
+    {
+        public string Description { get; set; } = string.Empty;
+        public string Type { get; set; } = "fanout";
 
+        public FanoutEvent(Guid messageId, string description)
+        {
+            MessageId = messageId;
+            Description = description;
+        }
+    }
 }

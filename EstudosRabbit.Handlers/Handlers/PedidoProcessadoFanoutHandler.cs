@@ -13,10 +13,8 @@ namespace EstudosRabbit.Handlers.Handlers
         }
         public async Task Handle(FanoutEvent message)
         {
-            await Task.Run(() =>
-            {
-                _logger.LogInformation($"{message}");
-            });
+            _logger.LogInformation($"{message}");
+            await Task.CompletedTask;
         }
     }
 }

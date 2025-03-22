@@ -14,6 +14,7 @@ namespace EstudosRabbit.Handlers.Consumers
         public async Task Consume(ConsumeContext<DirectEvent> context)
         {
             var message = context.Message;
+
             await _pagamentoProcessadoDirectHandler.Handle(message);
         }
     }
