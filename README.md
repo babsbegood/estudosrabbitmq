@@ -1,7 +1,7 @@
 # estudosrabbitmq
 Estudos Rabbitmq, implementação de exchanges
-Bibliotecas:
-Rabbitmq.Client
+Bibliotecas utilizadas:<br/>
+Rabbitmq.Client:<br/>
 MassTransit.Rabbitmq
 
 
